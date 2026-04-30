@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Satria Putra Nurahim Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================
+       CSS VARIABLES & RESET
+    ============================ */
+    :root {
+      --bg: #060b14;
+      --bg2: #0d1526;
+      --card: #0f1c30;
+      --card2: #132035;
+      --cyan: #00d4ff;
+      --cyan2: #00a8cc;
+      --purple: #7b2fff;
+      --purple2: #5a1fcc;
+      --green: #00ff9d;
+      --text: #e8f0fe;
+      --muted: #6b8aad;
+      --border: rgba(0, 212, 255, 0.15);
+      --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+      --glow-strong: 0 0 40px rgba(0, 212, 255, 0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+    /* ============================
+       LIQUID / BLOB BACKGROUND
+    ============================ */
+    .liquid-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: blobFloat linear infinite;
+    }
+    .blob-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, var(--cyan), transparent 70%);
+      top: -100px; left: -150px;
+      animation-duration: 20s;
+    }
+    .blob-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--purple), transparent 70%);
+      top: 40%; right: -100px;
+      animation-duration: 25s;
+      animation-delay: -8s;
+    }
+    .blob-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--green), transparent 70%);
+      bottom: 10%; left: 30%;
+      animation-duration: 18s;
+      animation-delay: -4s;
+    }
+
+    @keyframes blobFloat {
+      0%   { transform: translate(0, 0) scale(1); }
+      25%  { transform: translate(30px, -40px) scale(1.05); }
+      50%  { transform: translate(-20px, 30px) scale(0.95); }
+      75%  { transform: translate(20px, 20px) scale(1.02); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* ============================
+       NETWORK CANVAS
+    ============================ */
+    #network-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* ============================
+       LAYOUT & SECTIONS
+    ============================ */
+    .wrap { position: relative; z-index: 1; }
+
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
+
+    /* ============================
+       NAV
+    ============================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(6, 11, 20, 0.7);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--purple); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--cyan);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--cyan);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* ============================
+       HERO
+    ============================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 30px; height: 1px;
+      background: var(--cyan);
+    }
+
+    .hero-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+    .hero-name .accent { color: var(--cyan); }
+
+    .hero-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin: 14px 0 24px;
+      letter-spacing: 1px;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #8babc9;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 30px;
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--cyan2));
+      color: var(--bg);
+      box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 40px rgba(0, 212, 255, 0.55);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1.5px solid rgba(0, 212, 255, 0.4);
+    }
+    .btn-outline:hover {
+      background: rgba(0, 212, 255, 0.08);
+      border-color: var(--cyan);
+      transform: translateY(-3px);
+    }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-avatar-wrap {
+      position: relative;
+      width: 280px;
+      height: 280px;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, var(--cyan), var(--purple)) border-box;
+      animation: spinRing 8s linear infinite;
+    }
+    .avatar-ring-2 {
+      inset: -12px;
+      border: 1px dashed rgba(0,212,255,0.25);
+      animation-duration: 14s;
+      animation-direction: reverse;
+    }
+
+    @keyframes spinRing {
+      to { transform: rotate(360deg); }
+    }
+
+    .avatar-core {
+      position: absolute;
+      inset: 14px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--card), var(--bg2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar-svg {
+      width: 120px;
+      opacity: 0.9;
+    }
+
+    .orbit-dot {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+      animation: orbitDot 6s linear infinite;
+    }
+    .orbit-dot:nth-child(2) {
+      background: var(--purple);
+      box-shadow: 0 0 12px var(--purple);
+      animation-duration: 9s;
+      animation-delay: -3s;
+    }
+    .orbit-dot:nth-child(3) {
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+      animation-duration: 12s;
+      animation-delay: -6s;
+    }
+
+    @keyframes orbitDot {
+      0%   { transform: rotate(0deg) translateX(145px); }
+      100% { transform: rotate(360deg) translateX(145px); }
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 14px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+      border-color: rgba(0,212,255,0.4);
+      box-shadow: var(--glow);
+      transform: translateY(-3px);
+    }
+
+    .stat-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============================
+       SECTION HEADINGS
+    ============================ */
+    .section-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .section-title .line {
+      display: inline-block;
+      position: relative;
+    }
+    .section-title .line::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 550px;
+      margin-bottom: 50px;
+    }
+
+    /* Divider line */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ============================
+       ABOUT
+    ============================ */
+    #about { background: var(--bg2); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 70px;
+      align-items: start;
+    }
+
+    .about-info-block {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-chip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      transition: all 0.3s ease;
+    }
+    .info-chip:hover {
+      border-color: rgba(0,212,255,0.4);
+      transform: translateX(6px);
+    }
+    .info-chip-icon {
+      font-size: 1.4rem;
+      width: 40px;
+      text-align: center;
+    }
+    .info-chip-text strong {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .info-chip-text span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .about-text p {
+      color: #8babc9;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(123,47,255,0.06));
+      border: 1px solid rgba(0,212,255,0.15);
+      border-left: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #9abdd4;
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* ============================
+       SKILLS
+    ============================ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .skill-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,212,255,0.04), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .skill-card:hover {
+      border-color: rgba(0,212,255,0.35);
+      transform: translateY(-6px);
+      box-shadow: var(--glow);
+    }
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-card-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .skill-card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .skill-name {
+      font-size: 0.87rem;
+      color: #8babc9;
+    }
+    .skill-bar-wrap {
+      flex: 1;
+      margin: 0 14px;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .skill-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .skill-pct {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    /* ============================
+       EXPERIENCE
+    ============================ */
+    #experience { background: var(--bg2); }
+
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--cyan), var(--purple), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -47px;
+      top: 10px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 16px var(--cyan);
+      border: 2px solid var(--bg2);
+    }
+
+    .timeline-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .timeline-card:hover {
+      border-color: rgba(0,212,255,0.35);
+      box-shadow: var(--glow);
+      transform: translateX(6px);
+    }
+
+    .tl-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .tl-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .tl-company {
+      font-size: 0.9rem;
+      color: var(--cyan);
+      margin-top: 2px;
+    }
+
+    .tl-badge {
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.25);
+      color: var(--cyan);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .tl-desc {
+      color: #7a9ab8;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .tl-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tl-tag {
+      background: rgba(123,47,255,0.12);
+      border: 1px solid rgba(123,47,255,0.25);
+      color: #b390ff;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* ============================
+       EDUCATION
+    ============================ */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .edu-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .edu-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+    }
+    .edu-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--glow);
+      border-color: rgba(0,212,255,0.3);
+    }
+
+    .edu-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+    .edu-year {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .edu-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .edu-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ============================
+       NETWORK MAP (decorative)
+    ============================ */
+    #network { background: var(--bg); }
+
+    .network-demo {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .network-demo-header {
+      background: rgba(0,0,0,0.3);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nd-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .nd-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+    #topology-canvas {
+      width: 100%;
+      height: 380px;
+      display: block;
+    }
+
+    /* ============================
+       CONTACT
+    ============================ */
+    #contact { background: var(--bg2); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+    .contact-link:hover {
+      border-color: rgba(0,212,255,0.4);
+      transform: translateX(8px);
+      box-shadow: var(--glow);
+    }
+    .contact-link-icon {
+      width: 42px; height: 42px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .contact-link strong {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .contact-link span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .form-group label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .form-group input,
+    .form-group textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 16px;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    }
+    .form-group textarea { height: 120px; }
+
+    /* ============================
+       FOOTER
+    ============================ */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 36px 0;
+      text-align: center;
+    }
+    footer p {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    footer span { color: var(--cyan); }
+
+    /* ============================
+       SCROLL REVEAL
+    ============================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================
+       FLOATING PARTICLES
+    ============================ */
+    .particles-wrap {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: particleFloat linear infinite;
+      opacity: 0;
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-20px) scale(1); opacity: 0; }
+    }
+
+    /* ============================
+       RESPONSIVE
+    ============================ */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero-tag { justify-content: center; }
+      .hero-desc { margin: 0 auto 36px; }
+      .btn-group { justify-content: center; }
+      .hero-visual { order: -1; }
+      .hero-stats { margin-top: 30px; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      nav { padding: 16px 24px; }
+      .nav-links {
+        position: fixed;
+        top: 0; right: -100%;
+        width: 260px; height: 100vh;
+        background: var(--card);
+        border-left: 1px solid var(--border);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        transition: right 0.4s ease;
+        z-index: 200;
+      }
+      .nav-links.open { right: 0; }
+      .nav-links a { font-size: 1.1rem; }
+      .hamburger { display: flex; z-index: 201; }
+    }
+
+    @media (max-width: 500px) {
+      .hero-stats { grid-template-columns: repeat(3, 1fr); }
+      .hero-avatar-wrap { width: 220px; height: 220px; }
+      section { padding: 70px 0; }
+    }
+  </style>
+</head>
+<body>
+  
+<!-- Liquid Background -->
+<div class="liquid-bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- Network Canvas -->
+<canvas id="network-canvas"></canvas>
+
+<!-- Particles -->
+<div class="particles-wrap" id="particles"></div>
+
+<!-- ======================== WRAP ======================== -->
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo"><span></span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Tentang</a></li>
+      <li><a href="#skills">Keahlian</a></li>
+      <li><a href="#experience">Pengalaman</a></li>
+      <li><a href="#education">Pendidikan</a></li>
+      <li><a href="#network">Topologi</a></li>
+      <li><a href="#contact">Kontak</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======================== HERO ======================== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <!-- Left -->
+        <div>
+          <div class="hero-tag">IT Network Specialist</div>
+          <h1 class="hero-name">
+            Satria Putra<br>
+            <span class="accent">Nurahim</span>
+          </h1>
+          <p class="hero-title">Network Engineer & IT Support</p>
+          <p class="hero-desc">
+            Lulusan SMK jurusan Teknik Komputer & Jaringan dengan keahlian dalam konfigurasi jaringan, topologi, Cisco, dan MikroTik. Siap memberikan solusi IT terbaik untuk kebutuhan Anda.
+          </p>
+          <div class="btn-group">
+            <a href="#contact" class="btn btn-primary">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              Hubungi Saya
+            </a>
+            <a href="#skills" class="btn btn-outline">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Lihat Keahlian
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-num">18</div>
+              <div class="stat-label">Tahun</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">4</div>
+              <div class="stat-label">Bulan Magang</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">TKJ</div>
+              <div class="stat-label">Jurusan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Visual -->
+        <div class="hero-visual">
+          <div class="hero-avatar-wrap">
+            <div class="avatar-ring avatar-ring-2"></div>
+            <div class="avatar-ring"></div>
+  <div class="avatar-core">
+  <img src="satria.png" alt="Satria Putra Nurahim"
+    style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+</div>
+            <!-- Orbit dots -->
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+            <div class="orbit-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== ABOUT ======================== -->
+  <section id="about">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// about me</div>
+        <h2 class="section-title"><span class="line">Tentang Saya</span></h2>
+      </div>
+      <div class="about-grid">
+        <!-- Info chips -->
+        <div class="about-info-block reveal">
+          <div class="info-chip">
+            <div class="info-chip-icon">👤</div>
+            <div class="info-chip-text">
+              <strong>Satria Putra Nurahim</strong>
+              <span>18 Tahun</span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-icon">🏫</div>
+            <div class="info-chip-text">
+              <strong>SMK Teratai Putih Jakarta</strong>
+              <span>Jurusan Teknik Komputer & Jaringan (TKJ)</span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-icon">💼</div>
+            <div class="info-chip-text">
+              <strong>Magang KEMNAKER</strong>
+              <span>4 Bulan sebagai IT Support</span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-icon">🎓</div>
+            <div class="info-chip-text">
+              <strong>Pelatihan Jaringan P4</strong>
+              <span>Jakarta Timur — Network Training</span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-icon">📍</div>
+            <div class="info-chip-text">
+              <strong>Jakarta</strong>
+              <span>Indonesia</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="about-text reveal">
+          <p>
+            Saya adalah lulusan SMK Teratai Putih Jakarta jurusan Teknik Komputer dan Jaringan (TKJ) yang memiliki passion mendalam di bidang jaringan komputer dan IT Support. Sejak duduk di bangku sekolah, saya telah mengembangkan keahlian teknis yang kuat dalam infrastruktur jaringan.
+          </p>
+          <p>
+            Pengalaman magang selama 4 bulan di Kementerian Ketenagakerjaan (KEMNAKER) sebagai IT Support telah membekali saya dengan pengalaman nyata dalam lingkungan kerja profesional, termasuk troubleshooting perangkat keras, pengelolaan jaringan, dan dukungan teknis langsung kepada pengguna.
+          </p>
+          <p>
+            Saya juga telah mengikuti pelatihan jaringan intensif di P4 Jakarta Timur, yang memperkuat pemahaman saya tentang protokol jaringan, konfigurasi perangkat, dan best practice dalam dunia IT.
+          </p>
+          <div class="highlight-box">
+            "Bagi saya, jaringan bukan hanya tentang kabel dan perangkat — ini tentang menghubungkan orang dan memungkinkan produktivitas tanpa batas."
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== SKILLS ======================== -->
+  <section id="skills">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// keahlian</div>
+        <h2 class="section-title"><span class="line">Technical Skills</span></h2>
+        <p class="section-sub">Keahlian teknis yang saya miliki di bidang jaringan komputer dan IT Support.</p>
+      </div>
+      <div class="skills-grid">
+
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">🌐</div>
+          <div class="skill-card-title">Networking Core</div>
+          <div class="skill-item">
+            <span class="skill-name">Topologi Jaringan</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="90"></div></div>
+            <span class="skill-pct">90%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Kabel LAN / Crimping</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="95"></div></div>
+            <span class="skill-pct">95%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">IP Addressing / Subnetting</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="85"></div></div>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">OSI & TCP/IP Model</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="80"></div></div>
+            <span class="skill-pct">80%</span>
+          </div>
+        </div>
+
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">🔧</div>
+          <div class="skill-card-title">Network Devices</div>
+          <div class="skill-item">
+            <span class="skill-name">MikroTik RouterOS</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="88"></div></div>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Cisco IOS (CLI)</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="82"></div></div>
+            <span class="skill-pct">82%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Switch & Router Config</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="85"></div></div>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Wireless Access Point</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="80"></div></div>
+            <span class="skill-pct">80%</span>
+          </div>
+        </div>
+
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">💻</div>
+          <div class="skill-card-title">IT Support</div>
+          <div class="skill-item">
+            <span class="skill-name">Hardware Troubleshooting</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="88"></div></div>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Windows Administration</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="85"></div></div>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Network Troubleshooting</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="87"></div></div>
+            <span class="skill-pct">87%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Linux (Dasar)</span>
+            <div class="skill-bar-wrap"><div class="skill-bar" data-pct="65"></div></div>
+            <span class="skill-pct">65%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== EXPERIENCE ======================== -->
+  <section id="experience">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// pengalaman</div>
+        <h2 class="section-title"><span class="line">Pengalaman</span></h2>
+        <p class="section-sub">Riwayat pengalaman profesional dan pelatihan yang telah saya jalani.</p>
+      </div>
+      <div class="timeline reveal">
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="tl-header">
+              <div>
+                <div class="tl-title">IT Support Intern</div>
+                <div class="tl-company">Kementerian Ketenagakerjaan (KEMNAKER)</div>
+              </div>
+              <span class="tl-badge">4 Bulan • Januari-Mei 2025</span>
+            </div>
+            <p class="tl-desc">
+              Melaksanakan praktik kerja lapangan (PKL) di lingkungan Kementerian Ketenagakerjaan Republik Indonesia. Mempelajari coding dan bahasa pemrograman, membuat database, dan membuat database bisa diakses dengan jaringan lokal menggunakan xampp, serta memberikan dukungan teknis kepada pegawai. Mendapatkan pengalaman nyata dalam pengelolaan jaringan enterprise dan standar keamanan IT pemerintahan.
+            </p>
+            <div class="tl-tags">
+              <span class="tl-tag">IT Support</span>
+              <span class="tl-tag">Network Maintenance</span>
+              <span class="tl-tag">Hardware Repair</span>
+              <span class="tl-tag">Troubleshooting</span>
+              <span class="tl-tag">Government IT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--purple);box-shadow:0 0 16px var(--purple);"></div>
+          <div class="timeline-card">
+            <div class="tl-header">
+              <div>
+                <div class="tl-title">Pelatihan Jaringan Komputer</div>
+                <div class="tl-company">P4 — Pusat Pelatihan, Jakarta Timur</div>
+              </div>
+              <span class="tl-badge" style="background:rgba(123,47,255,0.1);border-color:rgba(123,47,255,0.3);color:#b390ff;">Sertifikasi</span>
+            </div>
+            <p class="tl-desc">
+              Mengikuti pelatihan intensif jaringan komputer di P4 Jakarta Timur. Pelatihan mencakup konfigurasi perangkat jaringan, desain topologi, pengkabelan terstruktur, dan administrasi sistem jaringan. Memperdalam pemahaman tentang protokol jaringan dan penerapan solusi jaringan skala menengah.
+            </p>
+            <div class="tl-tags">
+              <span class="tl-tag" style="background:rgba(123,47,255,0.12);border-color:rgba(123,47,255,0.25);color:#b390ff;">Network Configuration</span>
+              <span class="tl-tag" style="background:rgba(123,47,255,0.12);border-color:rgba(123,47,255,0.25);color:#b390ff;">Topology Design</span>
+              <span class="tl-tag" style="background:rgba(123,47,255,0.12);border-color:rgba(123,47,255,0.25);color:#b390ff;">Structured Cabling</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== EDUCATION ======================== -->
+  <section id="education">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// pendidikan</div>
+        <h2 class="section-title"><span class="line">Pendidikan</span></h2>
+        <p class="section-sub">Latar belakang pendidikan formal yang membentuk fondasi keahlian saya.</p>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-card reveal">
+          <div class="edu-icon">🏫</div>
+          <div class="edu-year">2023 — 2026</div>
+          <div class="edu-title">SMKS Teratai Putih Jakarta</div>
+          <div class="edu-sub">Teknik Komputer dan Jaringan (TKJ)<br>Fokus pada infrastruktur jaringan, pengkabelan, konfigurasi perangkat, dan IT Support. Lulus dengan kompetensi keahlian TKJ.</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-icon">🎓</div>
+          <div class="edu-year">2025</div>
+          <div class="edu-title">Pelatihan Jaringan P4</div>
+          <div class="edu-sub">Jakarta Timur<br>Pelatihan intensif jaringan komputer mencakup konfigurasi MikroTik, Cisco, desain topologi, dan manajemen jaringan enterprise.</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-icon">💼</div>
+          <div class="edu-year">Januari-Mei 2025</div>
+          <div class="edu-title">Praktik Kerja Lapangan</div>
+          <div class="edu-sub">KEMNAKER — Jakarta<br>4 bulan magang sebagai IT Support di lingkungan pemerintah federal, menangani infrastruktur IT dan dukungan teknis multi-departemen.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== NETWORK TOPOLOGY DEMO ======================== -->
+  <section id="network">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// demo topologi</div>
+        <h2 class="section-title"><span class="line">Network Topology</span></h2>
+        <p class="section-sub">Simulasi topologi jaringan interaktif — demonstrasi keahlian desain jaringan saya.</p>
+      </div>
+      <div class="network-demo reveal">
+        <div class="network-demo-header">
+          <div class="nd-dot" style="background:#ff5f57"></div>
+          <div class="nd-dot" style="background:#ffbd2e"></div>
+          <div class="nd-dot" style="background:#28c840"></div>
+          <span class="nd-title">topology-simulator.exe — Live Network Map</span>
+        </div>
+        <canvas id="topology-canvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ======================== CONTACT ======================== -->
+  <section id="contact">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-tag">// kontak</div>
+        <h2 class="section-title"><span class="line">Hubungi Saya</span></h2>
+        <p class="section-sub">Tertarik untuk bekerja sama atau ada pertanyaan? Jangan ragu untuk menghubungi saya.</p>
+      </div>
+      <div class="contact-grid">
+        <!-- Contact links -->
+        <div class="contact-links reveal">
+          <a href="mailto:nurahimputrasatria@gmail.com" class="contact-link">
+            <div class="contact-link-icon">✉️</div>
+            <div>
+              <strong>Email</strong>
+              <span>nurahimputrasatria@gmail.com</span>
+            </div>
+          </a>
+          <a href="https://www.linkedin.com/in/satria-putra-nurahim-a23469407?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="contact-link">
+            <div class="contact-link-icon">🔗</div>
+            <div>
+              <strong>LinkedIn</strong>
+              <span>Satria Putra Nurahim</span>
+            </div>
+          </a>
+          <a href="https://wa.me/6285882307528" target="_blank" class="contact-link">
+            <div class="contact-link-icon">📱</div>
+            <div>
+              <strong>WhatsApp</strong>
+              <span>+6285882307528</span>
+            </div>
+          </a>
+          <a href="#" class="contact-link">
+            <div class="contact-link-icon">📍</div>
+            <div>
+              <strong>Lokasi</strong>
+              <span>Jakarta, Indonesia</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Form -->
+        <div class="contact-form reveal">
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" placeholder="Nama anda" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="Email anda" />
+          </div>
+          <div class="form-group">
+            <label>Pesan</label>
+            <textarea placeholder="Ceritakan kebutuhan Anda..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="sendMsg()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            Kirim Pesan
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer>
+     <span>Satria Putra Nurahim</span> — IT Network Specialist &nbsp;|&nbsp;</p>
+  </footer>
+
+</div><!-- /wrap -->
+
+<!-- ======================== JAVASCRIPT ======================== -->
+<script>
+
+/* ============================
+   NETWORK BACKGROUND CANVAS
+============================ */
+const bgCanvas = document.getElementById('network-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgNodes = [];
+
+function resizeBg() {
+  bgCanvas.width = window.innerWidth;
+  bgCanvas.height = window.innerHeight;
+}
+resizeBg();
+window.addEventListener('resize', resizeBg);
+
+for (let i = 0; i < 60; i++) {
+  bgNodes.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2 + 1
+  });
+}
+
+function drawBg() {
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  bgNodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > bgCanvas.width) n.vx *= -1;
+    if (n.y < 0 || n.y > bgCanvas.height) n.vy *= -1;
+
+    bgCtx.beginPath();
+    bgCtx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    bgCtx.fillStyle = 'rgba(0,212,255,0.6)';
+    bgCtx.fill();
+  });
+
+  for (let i = 0; i < bgNodes.length; i++) {
+    for (let j = i + 1; j < bgNodes.length; j++) {
+      const dx = bgNodes[i].x - bgNodes[j].x;
+      const dy = bgNodes[i].y - bgNodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 130) {
+        bgCtx.beginPath();
+        bgCtx.moveTo(bgNodes[i].x, bgNodes[i].y);
+        bgCtx.lineTo(bgNodes[j].x, bgNodes[j].y);
+        bgCtx.strokeStyle = `rgba(0,212,255,${(1 - dist / 130) * 0.25})`;
+        bgCtx.lineWidth = 0.7;
+        bgCtx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+/* ============================
+   TOPOLOGY CANVAS
+============================ */
+const topoCanvas = document.getElementById('topology-canvas');
+const topoCtx = topoCanvas.getContext('2d');
+
+function resizeTopo() {
+  topoCanvas.width = topoCanvas.offsetWidth;
+  topoCanvas.height = topoCanvas.offsetHeight || 380;
+}
+
+const devices = [
+  { id: 'internet', label: 'Internet', icon: '🌐', color: '#00d4ff' },
+  { id: 'router',   label: 'Router',   icon: '📡', color: '#7b2fff' },
+  { id: 'sw1',      label: 'Switch 1', icon: '🔀', color: '#00ff9d' },
+  { id: 'sw2',      label: 'Switch 2', icon: '🔀', color: '#00ff9d' },
+  { id: 'pc1',      label: 'PC 1',     icon: '💻', color: '#00d4ff' },
+  { id: 'pc2',      label: 'PC 2',     icon: '💻', color: '#00d4ff' },
+  { id: 'pc3',      label: 'PC 3',     icon: '💻', color: '#00d4ff' },
+  { id: 'pc4',      label: 'PC 4',     icon: '💻', color: '#00d4ff' },
+  { id: 'server',   label: 'Server',   icon: '🖥️',  color: '#ffbd2e' },
+];
+
+const connections = [
+  ['internet','router'],
+  ['router','sw1'], ['router','sw2'],
+  ['sw1','pc1'], ['sw1','pc2'], ['sw1','server'],
+  ['sw2','pc3'], ['sw2','pc4'],
+];
+
+let topoPositions = {};
+let packets = [];
+let animT = 0;
+
+function setTopoLayout() {
+  resizeTopo();
+  const W = topoCanvas.width, H = topoCanvas.height;
+  topoPositions = {
+    internet: { x: W * 0.5,  y: H * 0.08 },
+    router:   { x: W * 0.5,  y: H * 0.25 },
+    sw1:      { x: W * 0.28, y: H * 0.52 },
+    sw2:      { x: W * 0.72, y: H * 0.52 },
+    pc1:      { x: W * 0.12, y: H * 0.78 },
+    pc2:      { x: W * 0.28, y: H * 0.86 },
+    server:   { x: W * 0.44, y: H * 0.82 },
+    pc3:      { x: W * 0.60, y: H * 0.86 },
+    pc4:      { x: W * 0.85, y: H * 0.78 },
+  };
+}
+
+function spawnPacket() {
+  if (Math.random() < 0.03 && packets.length < 10) {
+    const conn = connections[Math.floor(Math.random() * connections.length)];
+    const rev = Math.random() < 0.5;
+    packets.push({
+      from: rev ? conn[1] : conn[0],
+      to:   rev ? conn[0] : conn[1],
+      t: 0, speed: 0.015 + Math.random() * 0.02
+    });
+  }
+}
+
+function drawTopo() {
+  topoCtx.clearRect(0, 0, topoCanvas.width, topoCanvas.height);
+  const pos = topoPositions;
+
+  // Draw connections
+  connections.forEach(([a, b]) => {
+    const pa = pos[a], pb = pos[b];
+    if (!pa || !pb) return;
+
+    // Glow line
+    topoCtx.beginPath();
+    topoCtx.moveTo(pa.x, pa.y);
+    topoCtx.lineTo(pb.x, pb.y);
+    topoCtx.strokeStyle = 'rgba(0,212,255,0.12)';
+    topoCtx.lineWidth = 6;
+    topoCtx.stroke();
+
+    // Main line
+    topoCtx.beginPath();
+    topoCtx.moveTo(pa.x, pa.y);
+    topoCtx.lineTo(pb.x, pb.y);
+    topoCtx.strokeStyle = 'rgba(0,212,255,0.35)';
+    topoCtx.lineWidth = 1.5;
+    topoCtx.setLineDash([4, 4]);
+    topoCtx.lineDashOffset = -animT * 20;
+    topoCtx.stroke();
+    topoCtx.setLineDash([]);
+  });
+
+  // Packets
+  packets = packets.filter(p => p.t <= 1);
+  packets.forEach(p => {
+    p.t += p.speed;
+    const pa = pos[p.from], pb = pos[p.to];
+    if (!pa || !pb) return;
+    const x = pa.x + (pb.x - pa.x) * p.t;
+    const y = pa.y + (pb.y - pa.y) * p.t;
+    topoCtx.beginPath();
+    topoCtx.arc(x, y, 5, 0, Math.PI * 2);
+    topoCtx.fillStyle = '#00ff9d';
+    topoCtx.shadowColor = '#00ff9d';
+    topoCtx.shadowBlur = 10;
+    topoCtx.fill();
+    topoCtx.shadowBlur = 0;
+  });
+
+  // Nodes
+  devices.forEach(d => {
+    const p = pos[d.id];
+    if (!p) return;
+
+    // Glow circle
+    const grad = topoCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 30);
+    grad.addColorStop(0, d.color + '33');
+    grad.addColorStop(1, 'transparent');
+    topoCtx.beginPath();
+    topoCtx.arc(p.x, p.y, 30, 0, Math.PI * 2);
+    topoCtx.fillStyle = grad;
+    topoCtx.fill();
+
+    // Node circle
+    topoCtx.beginPath();
+    topoCtx.arc(p.x, p.y, 20, 0, Math.PI * 2);
+    topoCtx.fillStyle = '#0f1c30';
+    topoCtx.strokeStyle = d.color;
+    topoCtx.lineWidth = 1.5;
+    topoCtx.fill();
+    topoCtx.stroke();
+
+    // Icon
+    topoCtx.font = '14px serif';
+    topoCtx.textAlign = 'center';
+    topoCtx.textBaseline = 'middle';
+    topoCtx.fillText(d.icon, p.x, p.y);
+
+    // Label
+    topoCtx.font = '600 11px Nunito, sans-serif';
+    topoCtx.fillStyle = '#8babc9';
+    topoCtx.textAlign = 'center';
+    topoCtx.textBaseline = 'top';
+    topoCtx.fillText(d.label, p.x, p.y + 24);
+  });
+
+  animT += 0.016;
+  spawnPacket();
+  requestAnimationFrame(drawTopo);
+}
+
+// Init topology after layout
+function initTopo() {
+  setTopoLayout();
+  drawTopo();
+}
+
+// Wait for the canvas to be rendered
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      initTopo();
+      obs.disconnect();
+    }
+  });
+});
+obs.observe(topoCanvas);
+
+window.addEventListener('resize', () => {
+  setTopoLayout();
+});
+
+/* ============================
+   SCROLL REVEAL
+============================ */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => io.observe(el));
+
+/* ============================
+   SKILL BARS
+============================ */
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.skill-bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+      skillObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.skill-card').forEach(c => skillObs.observe(c));
+
+/* ============================
+   FLOATING PARTICLES
+============================ */
+const particlesWrap = document.getElementById('particles');
+for (let i = 0; i < 25; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = `
+    left: ${Math.random() * 100}%;
+    width: ${Math.random() * 3 + 1}px;
+    height: ${Math.random() * 3 + 1}px;
+    animation-duration: ${Math.random() * 10 + 8}s;
+    animation-delay: ${Math.random() * 10}s;
+    background: ${Math.random() < 0.5 ? 'var(--cyan)' : 'var(--purple)'};
+  `;
+  particlesWrap.appendChild(p);
+}
+
+/* ============================
+   HAMBURGER
+============================ */
+const ham = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+ham.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+/* ============================
+   CONTACT FORM
+============================ */
+function sendMsg() {
+  alert('Terima kasih! Pesan Anda telah terkirim. Saya akan segera menghubungi Anda.');
+}
+
+/* ============================
+   NAVBAR SCROLL
+============================ */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 60) {
+    nav.style.background = 'rgba(6,11,20,0.92)';
+  } else {
+    nav.style.background = 'rgba(6,11,20,0.7)';
+  }
+});
+</script>
+</body>
+</html>
